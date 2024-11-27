@@ -24,7 +24,7 @@ flat out vec3 sky_color;
 
 flat out vec2 clouds_cumulus_coverage;
 flat out vec2 clouds_altocumulus_coverage;
-flat out float clouds_cirrus_coverage;
+flat out vec2 clouds_cirrus_coverage;
 
 flat out float clouds_cumulus_congestus_amount;
 flat out float clouds_stratus_amount;
@@ -83,8 +83,8 @@ uniform float biome_humidity;
 #define WEATHER_CLOUDS
 
 #if defined WORLD_OVERWORLD
-#include "/include/light/colors/light_color.glsl"
-#include "/include/light/colors/weather_color.glsl"
+#include "/include/lighting/colors/light_color.glsl"
+#include "/include/lighting/colors/weather_color.glsl"
 #include "/include/misc/weather.glsl"
 #include "/include/sky/atmosphere.glsl"
 #endif
@@ -98,7 +98,7 @@ void main() {
 
 	const vec3 sky_dir = normalize(vec3(0.0, 1.0, -0.8)); // don't point direcly upwards to avoid the sun halo when the sun path rotation is 0
 	sky_color = atmosphere_scattering(sky_dir, sun_dir) * sun_color + atmosphere_scattering(sky_dir, moon_dir) * moon_color;
-	sky_color = tau * mix(sky_color, vec3(sky_color.b) * sqrt(2.0), rcp_pi);
+	sky_color = (tau * 1.13) * sky_color;
 	sky_color = mix(sky_color, tau * get_weather_color(), rainStrength);
 
 	clouds_weather_variation(
@@ -141,7 +141,7 @@ flat in vec3 sky_color;
 
 flat in vec2 clouds_cumulus_coverage;
 flat in vec2 clouds_altocumulus_coverage;
-flat in float clouds_cirrus_coverage;
+flat in vec2 clouds_cirrus_coverage;
 
 flat in float clouds_cumulus_congestus_amount;
 flat in float clouds_stratus_amount;
@@ -302,7 +302,7 @@ void main() {
 	clouds.w          = result.transmittance;
 	apparent_distance = result.apparent_distance * rcp(CLOUDS_SCALE);
 #else
-	clouds = vec4(0.0, 0.0, 0.0, 1.0);
+	clouds            = vec4(0.0, 0.0, 0.0, 1.0);
 	apparent_distance = 1e6;
 #endif
 

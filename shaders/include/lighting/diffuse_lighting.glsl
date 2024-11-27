@@ -1,9 +1,9 @@
-#if !defined INCLUDE_LIGHT_DIFFUSE_LIGHTING
-#define INCLUDE_LIGHT_DIFFUSE_LIGHTING
+#if !defined INCLUDE_LIGHTING_DIFFUSE_LIGHTING
+#define INCLUDE_LIGHTING_DIFFUSE_LIGHTING
 
-#include "/include/light/colors/blocklight_color.glsl"
-#include "/include/light/colors/skylight_approx.glsl"
-#include "/include/light/bsdf.glsl"
+#include "/include/lighting/colors/blocklight_color.glsl"
+#include "/include/lighting/colors/skylight_approx.glsl"
+#include "/include/lighting/bsdf.glsl"
 #include "/include/misc/end_lighting_fix.glsl"
 #include "/include/misc/material.glsl"
 #include "/include/utility/phase_functions.glsl"
@@ -11,11 +11,11 @@
 #include "/include/utility/spherical_harmonics.glsl"
 
 #ifdef COLORED_LIGHTS
-#include "/include/light/lpv/blocklight.glsl"
+#include "/include/lighting/lpv/blocklight.glsl"
 #endif
 
 #ifdef HANDHELD_LIGHTING
-#include "/include/light/handheld_lighting.glsl"
+#include "/include/lighting/handheld_lighting.glsl"
 #endif
 
 #ifndef WORLD_OVERWORLD
@@ -109,7 +109,7 @@ vec3 get_diffuse_lighting(
 #ifdef SHADOW
 	vec3 diffuse = vec3(lift(max0(NoL), 0.33 * rcp(SHADING_STRENGTH)) * (1.0 - 0.5 * material.sss_amount));
 	vec3 bounced = 0.033 * (1.0 - shadows) * (1.0 - 0.1 * max0(normal.y)) * pow1d5(ao + eps) * pow4(light_levels.y) * BOUNCED_LIGHT_I;
-	vec3 sss = sss_approx(material.albedo, material.sss_amount, material.sheen_amount, sss_depth, LoV, shadows.x);
+	vec3 sss = sss_approx(material.albedo, material.sss_amount, material.sheen_amount, mix(sss_depth, 0.0, shadow_distance_fade), LoV, shadows.x);
 
 	// Adjust SSS outside of shadow distance
 	sss *= mix(1.0, ao * (clamp01(NoL) * 0.9 + 0.1), clamp01(shadow_distance_fade));
@@ -118,17 +118,12 @@ vec3 get_diffuse_lighting(
 	diffuse *= sqr(ao);
 	#endif
 
-	#ifdef CLOUD_SHADOWS
-	bounced *= cloud_shadows;
-	sss     *= cloud_shadows;
-	#endif
-
 	#ifdef SHADOW_VPS
 	// Add SSS and diffuse
-	lighting += light_color * (diffuse * shadows + bounced + sss);
+	lighting += diffuse * shadows + bounced + sss;
 	#else
 	// Blend SSS and diffuse
-	lighting += light_color * (mix(diffuse, sss, material.sss_amount) * shadows + bounced);
+	lighting += mix(diffuse, sss, material.sss_amount) * shadows + bounced;
 	#endif
 #else
 	// Simple shading for when shadows are disabled
@@ -139,11 +134,13 @@ vec3 get_diffuse_lighting(
 	     diffuse *= 1.0 * (0.9 + 0.1 * normal.x) * (0.8 + 0.2 * abs(flat_normal.y));
 	     diffuse *= ao * pow4(light_levels.y) * (dampen(light_dir.y) * 0.5 + 0.5);
 
-	lighting += light_color * diffuse;
+	lighting += diffuse;
+#endif
 
-	#ifdef CLOUD_SHADOWS
+	lighting *= light_color;
+
+#ifdef CLOUD_SHADOWS
 	lighting *= cloud_shadows;
-	#endif
 #endif
 #endif
 
@@ -193,4 +190,4 @@ vec3 get_diffuse_lighting(
 	return max0(lighting) * material.albedo * rcp_pi * mix(1.0, metal_diffuse_amount, float(material.is_metal));
 }
 
-#endif // INCLUDE_LIGHT_DIFFUSE_LIGHTING
+#endif // INCLUDE_LIGHTING_DIFFUSE_LIGHTING

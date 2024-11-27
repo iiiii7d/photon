@@ -1,8 +1,8 @@
-#if !defined INCLUDE_LIGHT_COLORS_SKYLIGHT_APPROX
-#define INCLUDE_LIGHT_COLORS_SKYLIGHT_APPROX
+#if !defined INCLUDE_LIGHTING_COLORS_SKYLIGHT_APPROX
+#define INCLUDE_LIGHTING_COLORS_SKYLIGHT_APPROX
 
 #if defined WORLD_OVERWORLD && defined PROGRAM_DEFERRED4 && !defined SH_SKYLIGHT
-#include "/include/light/colors/weather_color.glsl"
+#include "/include/lighting/colors/weather_color.glsl"
 
 vec3 skylight_approx(vec3 normal, vec3 flat_normal, vec3 shadows, float directional_lighting, float ao) {
 	vec3 horizon_color = mix(sky_samples[1], sky_samples[2], dot(normal.xz, moon_dir.xz) * 0.5 + 0.5);
@@ -22,8 +22,8 @@ vec3 skylight_approx(vec3 normal, vec3 flat_normal, vec3 shadows, float directio
 		 skylight  = mix(skylight, rain_skylight, rainStrength);
 	}
 
-	return skylight * (pow1d5(ao) * pi);
+	return skylight * (ao * pi);
 }
 #endif
 
-#endif // INCLUDE_LIGHT_COLORS_SKYLIGHT_APPROX
+#endif // INCLUDE_LIGHTING_COLORS_SKYLIGHT_APPROX
