@@ -23,6 +23,7 @@ screen.reflections                     = Reflections
 screen.refraction                      = Refraction
 screen.light_sources                   = Light Sources
 screen.shadows                         = Shadows
+screen.ao                              = Ambient Occlusion
 screen.color_grading                   = Color Grading
 screen.exposure                        = Exposure
 
@@ -33,6 +34,7 @@ screen.clouds_altocumulus              = Altocumulus Clouds Settings
 screen.clouds_cumulus_congestus        = Cumulus Congestus Clouds Settings
 screen.clouds_cirrus                   = Cirrus/Cirrocumulus Clouds Settings
 screen.clouds_minecrafty               = Blocky Clouds Settings
+screen.clouds_noctilucent              = Noctilucent Clouds Settings
 
 screen.fog_rlh                         = Rayleigh Coefficient
 screen.fog_mie                         = Mie Coefficient
@@ -112,10 +114,6 @@ option.HANDHELD_LIGHTING               = Handheld Lighting
 option.HANDHELD_LIGHTING.comment       = Handheld items cast light on the world. If coloured lighting is enabled the handheld lighting will be coloured like the lights themselves
 option.HANDHELD_LIGHTING_INTENSITY     = Handheld Lighting Intensity
 option.HANDHELD_LIGHTING_INTENSITY.comment = Adjusts the brightness of handheld light sources
-option.GTAO                            = Shader AO
-option.GTAO.comment                    = Ground-truth based ambient occlusion (GTAO). Adds soft shadows in corners
-option.VANILLA_AO                      = Vanilla AO
-option.VANILLA_AO.comment              = Minecraft's built-in ambient occlusion
 option.AO_IN_SUNLIGHT                  = AO in Sunlight
 option.AO_IN_SUNLIGHT.comment          = Whether to apply shader ambient occlusion in direct sunlight/moonlight
 option.CLOUD_SHADOWS                   = Cloud Shadows
@@ -148,6 +146,24 @@ option.BLOCK_ENTITY_SHADOWS            = Block Entity Shadows
 option.PIXELATED_SHADOWS               = Pixelated Shadows
 option.PIXELATED_SHADOWS.comment       = Shadows snap to block texels, creating a pixelated look
 option.PIXELATED_SHADOWS_RESOLUTION    = Pixelated Shadows Resolution
+
+option.SHADER_AO                       = Shader AO
+option.SHADER_AO.comment               = AO method used. Off - no shader AO. SSAO - lower quality but requires fewer samples/less filtering. GTAO - better quality but requires more samples/filtering
+value.SHADER_AO.SHADER_AO_NONE         = Off
+value.SHADER_AO.SHADER_AO_SSAO         = SSAO
+value.SHADER_AO.SHADER_AO_GTAO         = GTAO
+option.VANILLA_AO                      = Vanilla AO
+option.VANILLA_AO.comment              = Minecraft's built-in ambient occlusion
+option.SSAO_RADIUS                     = SSAO Radius
+comment.SSAO_RADIUS                    = Adjusts the radius of SSAO - distance which objects can occlude each otherdistance which objects can occlude each other
+option.SSAO_STEPS                      = SSAO Steps
+comment.SSAO_STEPS                     = Controls how noisy the SSAO appears
+option.GTAO_RADIUS                     = GTAO Radius
+comment.GTAO_RADIUS                    = Adjusts the radius of SSAO - distance which objects can occlude each otherdistance which objects can occlude each other
+option.GTAO_SLICES                     = GTAO Slices
+comment.GTAO_SLICES                    = Controls how noisy the GTAO appears
+option.GTAO_HORIZON_STEPS              = GTAO Horizon Steps
+comment.GTAO_HORIZON_STEPS             = Controls the accuracy of GTAO
 
 option.SUN_NR                          = Red
 option.SUN_NG                          = Green
@@ -212,6 +228,8 @@ value.shadowDistance.384.0             = 24 chunks
 value.shadowDistance.512.0             = 32 chunks
 value.shadowDistance.768.0             = 48 chunks
 value.shadowDistance.1024.0            = 64 chunks
+value.shadowDistance.2048.0            = 128 chunks
+value.shadowDistance.4096.0            = 256 chunks
 
 # Sky settings
 
@@ -344,6 +362,9 @@ option.CLOUDS_CIRROCUMULUS_COVERAGE        = Cirrocumulus Coverage
 option.CLOUDS_CIRROCUMULUS_SIZE            = Cirrocumulus Size
 option.CLOUDS_CIRROCUMULUS_DETAIL_STRENGTH = Cirrocumulus Detail Strength
 option.CLOUDS_CIRROCUMULUS_CURL_STRENGTH   = Cirrocumulus Curl Strength
+
+option.CLOUDS_NOCTILUCENT_INTENSITY    = Intensity
+option.CLOUDS_NOCTILUCENT_RARITY       = Rarity
 
 option.AURORA_NORMAL                   = Aurora in Any Biome
 option.AURORA_SNOW                     = Aurora in Snow Biome
@@ -640,6 +661,7 @@ option.CUSTOM_SKY.comment              = Enable custom skies from resource packs
 option.CUSTOM_SKY_BRIGHTNESS           = Custom Sky Brightness
 option.CUSTOM_SKY_BRIGHTNESS.comment   = Adjust custom sky brightness
 option.NOISE_ON_DH_TERRAIN             = Noise on DH terrain
+option.ENCHANTMENT_GLINT_BRIGHTNESS    = Enchantment Glint Brightness
 
 value.DEBUG_VIEW.DEBUG_VIEW_NONE       = OFF
 value.DEBUG_VIEW.DEBUG_VIEW_SAMPLER    = Sampler
