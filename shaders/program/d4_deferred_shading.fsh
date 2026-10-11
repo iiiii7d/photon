@@ -160,6 +160,10 @@ const bool colortex11MipmapEnabled = true;
 #define ATMOSPHERE_SCATTERING_LUT depthtex0
 #define TEMPORAL_REPROJECTION
 
+#ifdef PHOTONICS_IN_USE
+#define PHOTONICS_DIFFUSE
+#endif
+
 #include "/include/fog/simple_fog.glsl"
 #include "/include/lighting/diffuse_lighting.glsl"
 #include "/include/lighting/shadows/common.glsl"
@@ -211,7 +215,7 @@ void main() {
 
 #ifdef LOD_MOD_ACTIVE
     float depth_mc = texelFetch(depthtex1, texel, 0).x;
-    float depth_lod = texelFetch(lod_depth_tex, texel, 0).x;
+    float depth_lod = texelFetch(lod_depth_tex_shading, texel, 0).x;
     bool is_lod = is_lod_terrain(depth_mc, depth_lod);
 #else
     const bool is_lod = false;
@@ -571,6 +575,9 @@ void main() {
             0.0,
 #else
             shadow_distance_fade,
+#endif
+#ifdef PHOTONICS_DIFFUSE
+            is_lod,
 #endif
             NoL,
             NoV,

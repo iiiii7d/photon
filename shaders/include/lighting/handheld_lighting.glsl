@@ -16,7 +16,7 @@ uniform int heldBlockLightValue2;
 
 vec3 get_handheld_light_color(int held_item_id, int held_item_light_value) {
 #ifdef COLORED_LIGHTS
-    bool is_emitter = 10032 <= held_item_id && held_item_id < 10064;
+    bool is_emitter = 10032 <= held_item_id && held_item_id < 10080;
 
     if (is_emitter) {
         return texelFetch(
@@ -35,7 +35,7 @@ vec3 get_handheld_light_color(int held_item_id, int held_item_light_value) {
 }
 
 float get_handheld_light_falloff(vec3 scene_pos, float ao) {
-    float falloff = lift(rcp(dot(scene_pos, scene_pos) + 1.0), 1.2);
+    float falloff = lift(rcp(dot(scene_pos, scene_pos) + 1.0), 3.0);
     return falloff * mix(ao, 1.0, falloff * falloff)
         * HANDHELD_LIGHTING_INTENSITY;
 }
